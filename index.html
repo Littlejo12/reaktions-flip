@@ -262,6 +262,16 @@
     <div class="modal">
       <h2>Einstellungen</h2>
       <p>Du kannst Sound & Vibration jederzeit an/aus schalten.</p>
+      <div class="toggle">
+  <input id="chkMusic" type="checkbox" />
+  <label for="chkMusic">Hintergrundmusik</label>
+</div>
+
+<div class="toggle" style="gap:12px;">
+  <label for="musicVol" style="min-width:120px;">Musik-Lautstärke</label>
+  <input id="musicVol" type="range" min="0" max="100" value="35" />
+  <span id="musicVolLabel">35%</span>
+</div>
 
       <div class="toggle">
         <input id="chkSound" type="checkbox" />
