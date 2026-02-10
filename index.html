@@ -6,7 +6,6 @@
   <meta name="theme-color" content="#111827" />
   <title>Reaktions-Flip</title>
 
-  <!-- PWA -->
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,21 +13,29 @@
 
   <style>
     :root{
-      --bg:#0b1020; --card:#111827; --card2:#0f172a;
-      --text:#e5e7eb; --muted:#94a3b8; --line:rgba(148,163,184,.22);
-      --accent:#6366f1; --ok:#22c55e; --danger:#ef4444;
+      --bg:#0b1020;
+      --panel: rgba(255,255,255,.05);
+      --panel2: rgba(15,23,42,.62);
+      --line: rgba(148,163,184,.20);
+      --text:#e5e7eb;
+      --muted:#94a3b8;
+      --accent:#6366f1;
+      --ok:#22c55e;
+      --danger:#ef4444;
       --shadow: 0 18px 40px rgba(0,0,0,.35);
-      --r:18px;
+      --r: 18px;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; color:var(--text);
+      margin:0;
+      color:var(--text);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background: radial-gradient(1200px 600px at 20% 10%, rgba(99,102,241,.25), transparent 60%),
-                  radial-gradient(900px 500px at 90% 20%, rgba(34,197,94,.18), transparent 55%),
-                  radial-gradient(900px 600px at 50% 110%, rgba(239,68,68,.12), transparent 55%),
-                  var(--bg);
+      background:
+        radial-gradient(1200px 600px at 20% 10%, rgba(99,102,241,.25), transparent 60%),
+        radial-gradient(900px 500px at 90% 20%, rgba(34,197,94,.16), transparent 55%),
+        radial-gradient(900px 600px at 50% 110%, rgba(239,68,68,.12), transparent 55%),
+        var(--bg);
     }
     .wrap{
       min-height:100%;
@@ -36,33 +43,33 @@
       display:flex; align-items:center; justify-content:center;
     }
     .app{
-      width:min(560px, 100%);
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      width:min(620px, 100%);
       border:1px solid var(--line);
-      border-radius: calc(var(--r) + 6px);
+      border-radius: calc(var(--r) + 8px);
       box-shadow: var(--shadow);
       overflow:hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      backdrop-filter: blur(10px);
     }
     header{
       padding:18px 18px 14px;
-      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+      display:flex; justify-content:space-between; align-items:flex-start; gap:12px;
       background: linear-gradient(180deg, rgba(255,255,255,.06), transparent);
       border-bottom:1px solid var(--line);
     }
-    .title h1{margin:0; font-size:20px; letter-spacing:.2px}
-    .title p{margin:6px 0 0; color:var(--muted); font-size:13px; line-height:1.35}
+    .brand h1{margin:0; font-size:20px; letter-spacing:.2px}
+    .brand p{margin:6px 0 0; color:var(--muted); font-size:13px; line-height:1.35}
+    .topBtns{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
 
-    .btns{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
     button{
       border:1px solid var(--line);
       background: rgba(255,255,255,.06);
       color:var(--text);
       padding:10px 12px;
       border-radius: 14px;
-      font-weight:600;
+      font-weight:800;
       font-size:13px;
       cursor:pointer;
-      backdrop-filter: blur(10px);
       -webkit-tap-highlight-color: transparent;
     }
     button:active{transform: translateY(1px)}
@@ -70,16 +77,75 @@
       background: linear-gradient(180deg, rgba(99,102,241,.95), rgba(99,102,241,.75));
       border-color: rgba(99,102,241,.55);
     }
-    .ghost{background: rgba(255,255,255,.03)}
     .danger{
       background: linear-gradient(180deg, rgba(239,68,68,.95), rgba(239,68,68,.7));
       border-color: rgba(239,68,68,.5);
     }
+    .ghost{background: rgba(255,255,255,.03)}
 
-    .stats{padding:14px 18px; display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px}
-    .stat{
-      background: rgba(17,24,39,.55);
+    .screen{display:none}
+    .screen.active{display:block}
+
+    .home{
+      padding: 18px;
+      display:grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap:14px;
+    }
+    @media (max-width: 560px){
+      .home{grid-template-columns: 1fr}
+    }
+    .card{
       border:1px solid var(--line);
+      background: var(--panel2);
+      border-radius: calc(var(--r) + 6px);
+      padding:14px;
+    }
+    .card h2{margin:0 0 8px; font-size:16px}
+    .card p{margin:0; color:var(--muted); font-size:13px; line-height:1.35}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .spacer{height:12px}
+
+    .chipRow{display:flex; gap:10px; flex-wrap:wrap}
+    .chip{
+      padding:9px 10px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color:var(--muted);
+      font-weight:900;
+      font-size:12.5px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .chip.active{
+      color: var(--text);
+      border-color: rgba(99,102,241,.55);
+      background: rgba(99,102,241,.20);
+    }
+
+    .big{
+      width:100%;
+      padding:14px 14px;
+      border-radius: 16px;
+      font-size:14px;
+    }
+
+    .stats{
+      padding: 14px 18px;
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap:10px;
+      border-top:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      background: rgba(255,255,255,.02);
+    }
+    @media (max-width: 560px){
+      .stats{grid-template-columns: 1fr 1fr}
+    }
+    .stat{
+      border:1px solid var(--line);
+      background: rgba(17,24,39,.52);
       border-radius: var(--r);
       padding:10px 12px;
       display:flex; flex-direction:column; gap:6px;
@@ -87,51 +153,33 @@
     .stat span{color:var(--muted); font-size:12px}
     .stat b{font-size:18px}
 
-    .subbar{
-      padding: 0 18px 14px;
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;
-      border-bottom:1px solid var(--line);
-    }
-    .pill{
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.03);
-      padding:8px 10px;
-      border-radius: 999px;
-      color:var(--muted);
-      font-size:12.5px;
-      display:flex; gap:8px; align-items:center;
-    }
-    .pill b{color:var(--text)}
-    .seg{
-      display:flex; gap:8px; align-items:center; flex-wrap:wrap;
-    }
-    .seg button{padding:8px 10px; border-radius:999px}
-    .seg button.active{
-      background: rgba(99,102,241,.24);
-      border-color: rgba(99,102,241,.55);
-    }
-
-    .boardWrap{padding: 12px 18px 12px}
+    .game{padding: 12px 18px 14px}
     .board{
-      aspect-ratio:1/1; width:100%;
-      display:grid; grid-template-columns: repeat(3, 1fr);
-      gap:12px; padding:12px;
-      background: rgba(15,23,42,.55);
+      aspect-ratio:1/1;
+      width:100%;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:12px;
+      padding:12px;
       border:1px solid var(--line);
-      border-radius: calc(var(--r) + 4px);
+      border-radius: calc(var(--r) + 6px);
+      background: var(--panel2);
     }
     .tile{
       border-radius: 18px;
       border:1px solid var(--line);
       background: rgba(255,255,255,.05);
       transition: transform .08s ease, background .14s ease, box-shadow .14s ease, border-color .14s ease;
-      cursor:pointer; position:relative; overflow:hidden;
+      cursor:pointer;
       -webkit-tap-highlight-color: transparent;
+      position:relative;
+      overflow:hidden;
     }
     .tile:active{transform: scale(.98)}
     .tile.active{
-      background: radial-gradient(120px 120px at 40% 30%, rgba(255,255,255,.22), transparent 55%),
-                  linear-gradient(180deg, rgba(99,102,241,.95), rgba(99,102,241,.65));
+      background:
+        radial-gradient(120px 120px at 40% 30%, rgba(255,255,255,.22), transparent 55%),
+        linear-gradient(180deg, rgba(99,102,241,.95), rgba(99,102,241,.65));
       border-color: rgba(99,102,241,.65);
       box-shadow: 0 14px 28px rgba(99,102,241,.22);
     }
@@ -141,20 +189,32 @@
       box-shadow: 0 14px 26px rgba(239,68,68,.18);
     }
 
-    .hint{
-      color: var(--muted);
-      font-size: 12px;
+    .bar{
       padding: 0 18px 18px;
-      margin-top: -2px;
+      color: var(--muted);
+      font-size: 12.5px;
       display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
-      border-top: 1px solid var(--line);
     }
-    .hint .left{padding-top:10px}
-    .hint .right{padding-top:10px; display:flex; gap:10px; flex-wrap:wrap}
+    .pill{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      padding:8px 10px;
+      border-radius: 999px;
+      display:flex; gap:8px; align-items:center;
+    }
+    .pill b{color:var(--text)}
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px;
+      border:1px solid var(--line);
+      padding:2px 6px;
+      border-radius:8px;
+      color:var(--muted);
+    }
 
     dialog{
       border:none; border-radius: 18px; padding:0;
-      width:min(460px, calc(100% - 30px));
+      width:min(520px, calc(100% - 30px));
       background: rgba(17,24,39,.92);
       color:var(--text);
       box-shadow: var(--shadow);
@@ -165,38 +225,42 @@
       border:1px solid var(--line);
       border-radius: 18px;
     }
-    .modal h2{margin:0 0 8px; font-size:18px}
+    .modal h3{margin:0 0 8px; font-size:18px}
     .modal p{margin:0 0 14px; color:var(--muted); line-height:1.35; white-space:pre-line}
-    .row{display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap}
+    .modal .row{display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap}
     .list{
       margin: 10px 0 14px;
       border:1px solid var(--line);
       border-radius: 14px;
       overflow:hidden;
     }
-    .list .item{
+    .item{
       display:flex; justify-content:space-between; gap:10px;
       padding:10px 12px;
       background: rgba(255,255,255,.03);
       border-bottom:1px solid var(--line);
       font-size:13px;
     }
-    .list .item:last-child{border-bottom:none}
-    .kbd{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size:12px;
+    .item:last-child{border-bottom:none}
+    .toggle{display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:8px 0; color:var(--muted); font-size:13px}
+    input[type="checkbox"]{transform: scale(1.2)}
+    input[type="range"]{width: 180px}
+
+    a.linkBtn{
+      display:inline-flex; align-items:center; justify-content:center;
+      text-decoration:none;
       border:1px solid var(--line);
-      padding:2px 6px;
-      border-radius:8px;
-      color:var(--muted);
-    }
-    .toggle{
-      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-      padding:8px 0;
-      color:var(--muted);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius: 14px;
+      font-weight:900;
       font-size:13px;
     }
-    input[type="checkbox"]{transform: scale(1.2)}
+    a.linkBtn.primary{
+      background: linear-gradient(180deg, rgba(99,102,241,.95), rgba(99,102,241,.75));
+      border-color: rgba(99,102,241,.55);
+    }
   </style>
 </head>
 
@@ -204,85 +268,157 @@
   <div class="wrap">
     <div class="app">
       <header>
-        <div class="title">
+        <div class="brand">
           <h1>Reaktions-Flip</h1>
-          <p>Tippe die <b>leuchtende</b> Kachel. Falscher Tap oder zu langsam = Leben verlieren. Je höher der Score, desto schneller.</p>
+          <p>Mehr Spielspaß • App Feeling • Musik • Support</p>
         </div>
-        <div class="btns">
-          <button id="btnStart" class="primary">Start</button>
-          <button id="btnPause" class="ghost">Pause</button>
-          <button id="btnReset" class="danger">Neu</button>
+        <div class="topBtns">
+          <button id="btnHome" class="ghost">Home</button>
+          <button id="btnSettings" class="ghost">Einstellungen</button>
+          <button id="btnScores" class="ghost">Highscores</button>
         </div>
       </header>
 
-      <section class="stats">
-        <div class="stat"><span>Score</span><b id="score">0</b></div>
-        <div class="stat"><span>Combo</span><b id="combo">0</b></div>
-        <div class="stat"><span>Leben</span><b id="lives">3</b></div>
+      <!-- HOME -->
+      <section id="screenHome" class="screen active">
+        <div class="home">
+          <div class="card">
+            <h2>Start</h2>
+            <p>Wähle Modus & Schwierigkeit und starte dann das Spiel.</p>
+
+            <div class="spacer"></div>
+            <p><b>Modus</b></p>
+            <div class="chipRow" role="group" aria-label="Modus">
+              <div id="chipEndless" class="chip active">Endlos</div>
+              <div id="chipTime" class="chip">30s</div>
+            </div>
+
+            <div class="spacer"></div>
+            <p><b>Schwierigkeit</b></p>
+            <div class="chipRow" role="group" aria-label="Schwierigkeit">
+              <div id="chipEasy" class="chip">Easy</div>
+              <div id="chipNormal" class="chip active">Normal</div>
+              <div id="chipHard" class="chip">Hard</div>
+            </div>
+
+            <div class="spacer"></div>
+            <button id="btnPlay" class="primary big">Spielen</button>
+
+            <div class="spacer"></div>
+            <div class="row">
+              <button id="btnHow" class="ghost">Regeln</button>
+              <button id="btnResetAll" class="danger">Daten löschen</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Support</h2>
+            <p>Wenn dir das Spiel gefällt, kannst du mich unterstützen ❤️</p>
+            <div class="spacer"></div>
+            <a id="supportLink" class="linkBtn primary" href="#" target="_blank" rel="noopener">Support / Spenden</a>
+            <div class="spacer"></div>
+
+            <h2>Power-Ups</h2>
+            <p>Im Spiel laden sich Power-Ups durch Treffer auf.</p>
+            <div class="spacer"></div>
+            <p style="color:var(--muted);font-size:12.5px;">
+              • Shield: rettet dich 1× vor einem Fehler (wenn aktiviert)<br>
+              • Freeze: 5 Sekunden langsamer
+            </p>
+          </div>
+        </div>
       </section>
 
-      <div class="subbar">
-        <div class="seg" aria-label="Spielmodus">
-          <button id="modeEndless" class="active">Endlos</button>
-          <button id="modeTime">30s</button>
-        </div>
-        <div class="pill" id="timerPill">Zeitlimit: <b id="limit">1200</b> ms</div>
-        <div class="pill">Best: <b id="best">0</b></div>
-      </div>
+      <!-- GAME -->
+      <section id="screenGame" class="screen">
+        <section class="stats">
+          <div class="stat"><span>Score</span><b id="score">0</b></div>
+          <div class="stat"><span>Combo</span><b id="combo">0</b></div>
+          <div class="stat"><span>Leben</span><b id="lives">3</b></div>
+          <div class="stat"><span id="statRightLabel">Zeitlimit</span><b id="statRightValue">1200 ms</b></div>
+        </section>
 
-      <div class="boardWrap">
-        <div id="board" class="board" aria-label="Spielfeld (3x3)"></div>
-      </div>
-
-      <div class="hint">
-        <div class="left" id="hintLeft">Tipp: Triffst du falsch, verlierst du ein Leben.</div>
-        <div class="right">
-          <button id="btnScores" class="ghost">Highscores</button>
-          <button id="btnSettings" class="ghost">Einstellungen</button>
-          <span class="kbd" id="timeLeftKbd" style="display:none;">Rest: 30.0s</span>
+        <div class="game">
+          <div id="board" class="board" aria-label="Spielfeld (3x3)"></div>
         </div>
-      </div>
+
+        <div class="bar">
+          <div class="pill">Modus: <b id="pillMode">Endlos</b></div>
+          <div class="pill">Diff: <b id="pillDiff">Normal</b></div>
+          <div class="pill">Best: <b id="best">0</b></div>
+          <div class="pill" id="pillTimeLeft" style="display:none;">Rest: <b id="timeLeft">30.0s</b></div>
+
+          <div style="width:100%; display:flex; gap:10px; flex-wrap:wrap;">
+            <button id="btnShield" class="ghost" style="flex:1; min-width: 150px;">Shield</button>
+            <button id="btnFreeze" class="ghost" style="flex:1; min-width: 150px;">Freeze</button>
+            <button id="btnPause" class="ghost" style="flex:1; min-width: 150px;">Pause</button>
+            <button id="btnRestart" class="danger" style="flex:1; min-width: 150px;">Neu</button>
+          </div>
+
+          <div style="width:100%; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+            <span class="kbd" id="hint">Tippe die leuchtende Kachel.</span>
+            <span class="kbd" id="powerHint">Power-Ups laden sich auf.</span>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 
-  <!-- Game Over / Summary -->
+  <!-- RULES -->
+  <dialog id="dlgHow">
+    <div class="modal">
+      <h3>Regeln</h3>
+      <p>
+• Tippe die leuchtende Kachel, bevor die Zeit abläuft.
+• Falscher Tap oder zu langsam: Leben verlieren (Shield kann einmal retten).
+• Endlos: solange du Leben hast.
+• 30s: so viele Treffer wie möglich in 30 Sekunden.
+• Power-Ups: laden sich durch Treffer auf.
+      </p>
+      <div class="row">
+        <button id="howClose" class="primary">OK</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- GAME OVER -->
   <dialog id="dlgOver">
     <div class="modal">
-      <h2 id="overTitle">Game Over</h2>
+      <h3 id="overTitle">Game Over</h3>
       <p id="overText"></p>
       <div class="row">
-        <button id="overClose" class="ghost">Schließen</button>
+        <button id="overHome" class="ghost">Home</button>
         <button id="overAgain" class="primary">Nochmal</button>
       </div>
     </div>
   </dialog>
 
-  <!-- Settings -->
+  <!-- SETTINGS -->
   <dialog id="dlgSettings">
     <div class="modal">
-      <h2>Einstellungen</h2>
-      <p>Du kannst Sound & Vibration jederzeit an/aus schalten.</p>
-      <div class="toggle">
-  <input id="chkMusic" type="checkbox" />
-  <label for="chkMusic">Hintergrundmusik</label>
-</div>
-
-<div class="toggle" style="gap:12px;">
-  <label for="musicVol" style="min-width:120px;">Musik-Lautstärke</label>
-  <input id="musicVol" type="range" min="0" max="100" value="35" />
-  <span id="musicVolLabel">35%</span>
-</div>
+      <h3>Einstellungen</h3>
+      <p>iPhone: Audio läuft erst nach einer User-Aktion (z. B. „Spielen“).</p>
 
       <div class="toggle">
         <input id="chkSound" type="checkbox" />
-        <label for="chkSound">Sound</label>
+        <label for="chkSound">Sound (Effekte)</label>
       </div>
+
+      <div class="toggle">
+        <input id="chkMusic" type="checkbox" />
+        <label for="chkMusic">Hintergrundmusik</label>
+      </div>
+
+      <div class="toggle" style="gap:12px;">
+        <label for="rngMusic" style="min-width:140px;">Musik-Lautstärke</label>
+        <input id="rngMusic" type="range" min="0" max="100" value="35" />
+        <span id="rngMusicLabel">35%</span>
+      </div>
+
       <div class="toggle">
         <input id="chkVibe" type="checkbox" />
         <label for="chkVibe">Vibration</label>
       </div>
-
-      <p style="margin-top:10px;">Hinweis: iPhone spielt Sound erst, nachdem du einmal getippt hast (Browser-Regel).</p>
 
       <div class="row">
         <button id="settingsClose" class="primary">OK</button>
@@ -290,11 +426,11 @@
     </div>
   </dialog>
 
-  <!-- Highscores -->
+  <!-- HIGHSCORES -->
   <dialog id="dlgScores">
     <div class="modal">
-      <h2>Highscores (Top 10)</h2>
-      <p>Wird lokal auf deinem iPhone gespeichert.</p>
+      <h3>Highscores (Top 10)</h3>
+      <p id="scoresSubtitle">Pro Modus werden Scores lokal gespeichert.</p>
       <div class="list" id="scoreList"></div>
       <div class="row">
         <button id="scoresReset" class="danger">Zurücksetzen</button>
@@ -305,35 +441,71 @@
 
 <script>
 (() => {
-  // ---------- DOM ----------
-  const board = document.getElementById('board');
-  const elScore = document.getElementById('score');
-  const elCombo = document.getElementById('combo');
-  const elLives = document.getElementById('lives');
-  const elLimit = document.getElementById('limit');
-  const elBest  = document.getElementById('best');
-  const pillTimer = document.getElementById('timerPill');
-  const hintLeft = document.getElementById('hintLeft');
-  const timeLeftKbd = document.getElementById('timeLeftKbd');
+  // =======================
+  // MONEY: set your link
+  // =======================
+  const SUPPORT_URL = "https://example.com"; // <-- hier PayPal.me / Ko-fi / BuyMeACoffee eintragen
 
-  const btnStart = document.getElementById('btnStart');
-  const btnPause = document.getElementById('btnPause');
-  const btnReset = document.getElementById('btnReset');
+  // =======================
+  // DOM
+  // =======================
+  const screenHome = document.getElementById('screenHome');
+  const screenGame = document.getElementById('screenGame');
 
-  const btnModeEndless = document.getElementById('modeEndless');
-  const btnModeTime = document.getElementById('modeTime');
-
+  const btnHome = document.getElementById('btnHome');
   const btnSettings = document.getElementById('btnSettings');
   const btnScores = document.getElementById('btnScores');
 
+  const chipEndless = document.getElementById('chipEndless');
+  const chipTime = document.getElementById('chipTime');
+  const chipEasy = document.getElementById('chipEasy');
+  const chipNormal = document.getElementById('chipNormal');
+  const chipHard = document.getElementById('chipHard');
+
+  const btnPlay = document.getElementById('btnPlay');
+  const btnHow = document.getElementById('btnHow');
+  const btnResetAll = document.getElementById('btnResetAll');
+  const supportLink = document.getElementById('supportLink');
+
+  const board = document.getElementById('board');
+
+  const elScore = document.getElementById('score');
+  const elCombo = document.getElementById('combo');
+  const elLives = document.getElementById('lives');
+  const elBest = document.getElementById('best');
+
+  const pillMode = document.getElementById('pillMode');
+  const pillDiff = document.getElementById('pillDiff');
+
+  const statRightLabel = document.getElementById('statRightLabel');
+  const statRightValue = document.getElementById('statRightValue');
+
+  const pillTimeLeft = document.getElementById('pillTimeLeft');
+  const timeLeftEl = document.getElementById('timeLeft');
+
+  const hint = document.getElementById('hint');
+  const powerHint = document.getElementById('powerHint');
+
+  const btnShield = document.getElementById('btnShield');
+  const btnFreeze = document.getElementById('btnFreeze');
+  const btnPause = document.getElementById('btnPause');
+  const btnRestart = document.getElementById('btnRestart');
+
+  // dialogs
+  const dlgHow = document.getElementById('dlgHow');
+  const howClose = document.getElementById('howClose');
+
   const dlgOver = document.getElementById('dlgOver');
   const overTitle = document.getElementById('overTitle');
-  const overText  = document.getElementById('overText');
-  const overClose = document.getElementById('overClose');
+  const overText = document.getElementById('overText');
+  const overHome = document.getElementById('overHome');
   const overAgain = document.getElementById('overAgain');
 
   const dlgSettings = document.getElementById('dlgSettings');
   const chkSound = document.getElementById('chkSound');
+  const chkMusic = document.getElementById('chkMusic');
+  const rngMusic = document.getElementById('rngMusic');
+  const rngMusicLabel = document.getElementById('rngMusicLabel');
   const chkVibe = document.getElementById('chkVibe');
   const settingsClose = document.getElementById('settingsClose');
 
@@ -341,87 +513,11 @@
   const scoreList = document.getElementById('scoreList');
   const scoresClose = document.getElementById('scoresClose');
   const scoresReset = document.getElementById('scoresReset');
+  const scoresSubtitle = document.getElementById('scoresSubtitle');
 
-  // ---------- GAME STATE ----------
-  const GRID = 9;
-  let tiles = [];
-  let active = 0;
-
-  let running = false;
-  let timerRound = null;
-  let timerMode = null;
-
-  let score = 0;
-  let combo = 0;
-  let lives = 3;
-
-  // modes: "endless" or "time"
-  let mode = "endless";
-  const TIME_MODE_SECONDS = 30;
-  let timeLeft = TIME_MODE_SECONDS;
-
-  // ---------- STORAGE KEYS ----------
-  const BEST_KEY = 'rf_best_v2';
-  const SCORES_KEY = 'rf_top10_v1';
-  const SETTINGS_KEY = 'rf_settings_v1';
-
-  // ---------- SETTINGS ----------
-  const defaultSettings = { sound: true, vibe: true };
-  const settings = loadJSON(SETTINGS_KEY, defaultSettings);
-  chkSound.checked = !!settings.sound;
-  chkVibe.checked = !!settings.vibe;
-
-  // ---------- BEST + HIGHSCORES ----------
-  let best = Number(localStorage.getItem(BEST_KEY) || 0);
-  elBest.textContent = String(best);
-
-  let top10 = loadJSON(SCORES_KEY, []);
-  if (!Array.isArray(top10)) top10 = [];
-
-  // ---------- SOUND (WebAudio Beeps) ----------
-  let audioCtx = null;
-  function ensureAudio(){
-    if(!settings.sound) return;
-    if(!audioCtx){
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if(audioCtx.state === "suspended"){
-      audioCtx.resume().catch(()=>{});
-    }
-  }
-
-  function beep(freq, ms, gain=0.05){
-    if(!settings.sound) return;
-    ensureAudio();
-    if(!audioCtx) return;
-
-    const o = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    o.type = "sine";
-    o.frequency.value = freq;
-
-    g.gain.value = 0.0001;
-    g.gain.exponentialRampToValueAtTime(gain, audioCtx.currentTime + 0.01);
-    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + ms/1000);
-
-    o.connect(g);
-    g.connect(audioCtx.destination);
-    o.start();
-    o.stop(audioCtx.currentTime + ms/1000 + 0.02);
-  }
-
-  function sfxHit(){ beep(880, 90, 0.06); }
-  function sfxMiss(){ beep(220, 120, 0.07); }
-  function sfxStart(){ beep(660, 80, 0.05); setTimeout(()=>beep(990, 80, 0.05), 90); }
-  function sfxOver(){ beep(330, 140, 0.06); setTimeout(()=>beep(220, 160, 0.06), 150); }
-
-  // ---------- VIBE ----------
-  function vibe(ms){
-    if(!settings.vibe) return;
-    if(navigator.vibrate) navigator.vibrate(ms);
-  }
-
-  // ---------- HELPERS ----------
+  // =======================
+  // Storage helpers
+  // =======================
   function loadJSON(key, fallback){
     try{
       const raw = localStorage.getItem(key);
@@ -435,32 +531,258 @@
     localStorage.setItem(key, JSON.stringify(val));
   }
 
-  function roundTimeMs() {
-    // schneller mit Score, min 450 ms
-    return Math.max(450, 1200 - (score * 25));
+  // keys
+  const SETTINGS_KEY = 'rf_settings_v2';
+  const BEST_KEY = 'rf_best_v3';
+  const SCORES_ENDLESS = 'rf_top10_endless_v1';
+  const SCORES_TIME = 'rf_top10_time_v1';
+
+  // settings
+  const defaultSettings = { sound:true, music:true, musicVol:35, vibe:true };
+  const settings = Object.assign({}, defaultSettings, loadJSON(SETTINGS_KEY, defaultSettings));
+
+  chkSound.checked = !!settings.sound;
+  chkMusic.checked = !!settings.music;
+  chkVibe.checked = !!settings.vibe;
+  rngMusic.value = String(settings.musicVol ?? 35);
+  rngMusicLabel.textContent = `${rngMusic.value}%`;
+
+  // highscores
+  let best = Number(localStorage.getItem(BEST_KEY) || 0);
+  elBest.textContent = String(best);
+
+  let topEndless = loadJSON(SCORES_ENDLESS, []);
+  let topTime = loadJSON(SCORES_TIME, []);
+  if(!Array.isArray(topEndless)) topEndless = [];
+  if(!Array.isArray(topTime)) topTime = [];
+
+  // =======================
+  // Game State
+  // =======================
+  const GRID = 9;
+  const TIME_MODE_SECONDS = 30;
+
+  let mode = "endless"; // "endless" | "time"
+  let diff = "normal";  // "easy" | "normal" | "hard"
+
+  let running = false;
+  let paused = false;
+
+  let score = 0;
+  let combo = 0;
+  let lives = 3;
+
+  let active = 0;
+  let tiles = [];
+
+  let timerRound = null;
+  let timerMode = null;
+  let timeLeft = TIME_MODE_SECONDS;
+
+  // power-ups
+  let shieldCharge = 0;
+  let shieldArmed = false;
+  let freezeCharge = 0;
+  let freezeActiveUntil = 0;
+
+  // =======================
+  // Audio (SFX + Music)
+  // =======================
+  let audioCtx = null;
+  let sfxGain = null;
+  let bgmGain = null;
+  let bgmTimer = null;
+  let bgmStep = 0;
+
+  function ensureAudio(){
+    if(!settings.sound && !settings.music) return;
+    if(!audioCtx){
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if(audioCtx.state === "suspended"){
+      audioCtx.resume().catch(()=>{});
+    }
+    if(!sfxGain){
+      sfxGain = audioCtx.createGain();
+      sfxGain.gain.value = 0.18;
+      sfxGain.connect(audioCtx.destination);
+    }
+    if(!bgmGain){
+      bgmGain = audioCtx.createGain();
+      bgmGain.gain.value = 0.0;
+      bgmGain.connect(audioCtx.destination);
+    }
+  }
+
+  function beep(freq, ms, gain=0.12, type="sine"){
+    if(!settings.sound) return;
+    ensureAudio();
+    if(!audioCtx || !sfxGain) return;
+
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = type;
+    o.frequency.value = freq;
+
+    g.gain.value = 0.0001;
+    g.gain.exponentialRampToValueAtTime(gain, audioCtx.currentTime + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + ms/1000);
+
+    o.connect(g);
+    g.connect(sfxGain);
+    o.start();
+    o.stop(audioCtx.currentTime + ms/1000 + 0.02);
+  }
+
+  const sfx = {
+    hit(){ beep(880, 80, 0.12, "sine"); },
+    miss(){ beep(220, 120, 0.13, "sine"); },
+    start(){ beep(660, 70, 0.10); setTimeout(()=>beep(990, 70, 0.10), 85); },
+    over(){ beep(330, 140, 0.10); setTimeout(()=>beep(220, 170, 0.10), 160); },
+    power(){ beep(740, 90, 0.10, "triangle"); },
+  };
+
+  function vibe(ms){
+    if(!settings.vibe) return;
+    if(navigator.vibrate) navigator.vibrate(ms);
+  }
+
+  function setMusicVolume(pct){
+    settings.musicVol = pct;
+    saveJSON(SETTINGS_KEY, settings);
+    rngMusicLabel.textContent = `${pct}%`;
+    ensureAudio();
+    if(bgmGain){
+      bgmGain.gain.value = (settings.music ? pct : 0) / 100 * 0.22;
+    }
+  }
+
+  function playTone(freq, ms){
+    if(!settings.music) return;
+    ensureAudio();
+    if(!audioCtx || !bgmGain) return;
+
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = "triangle";
+    o.frequency.value = freq;
+
+    g.gain.value = 0.0001;
+    g.gain.exponentialRampToValueAtTime(0.18, audioCtx.currentTime + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + ms/1000);
+
+    o.connect(g);
+    g.connect(bgmGain);
+    o.start();
+    o.stop(audioCtx.currentTime + ms/1000 + 0.02);
+  }
+
+  function startBgm(){
+    if(!settings.music) return;
+    ensureAudio();
+    setMusicVolume(Number(settings.musicVol ?? 35));
+    if(bgmTimer) return;
+
+    const scale = {
+      C:  [261.63, 329.63, 392.00, 523.25],
+      Am: [220.00, 261.63, 329.63, 440.00],
+      F:  [174.61, 220.00, 261.63, 349.23],
+      G:  [196.00, 246.94, 293.66, 392.00],
+    };
+    const chords = [scale.C, scale.Am, scale.F, scale.G];
+    bgmStep = 0;
+
+    bgmTimer = setInterval(() => {
+      if(!running || paused || !settings.music) return;
+      const chord = chords[Math.floor(bgmStep / 16) % chords.length];
+      const note = chord[bgmStep % chord.length];
+      playTone(note, 110);
+      bgmStep++;
+    }, 125);
+  }
+
+  function stopBgm(){
+    if(bgmTimer){
+      clearInterval(bgmTimer);
+      bgmTimer = null;
+    }
+    if(bgmGain) bgmGain.gain.value = 0.0;
+  }
+
+  // =======================
+  // Difficulty & timing
+  // =======================
+  function baseTime(){
+    if(diff === "easy") return 1350;
+    if(diff === "hard") return 1050;
+    return 1200;
+  }
+  function minTime(){
+    if(diff === "easy") return 520;
+    if(diff === "hard") return 380;
+    return 450;
+  }
+  function speedFactor(){
+    if(diff === "easy") return 22;
+    if(diff === "hard") return 34;
+    return 28;
+  }
+  function roundTimeMs(){
+    let ms = Math.max(minTime(), baseTime() - (score * speedFactor()));
+    if(Date.now() < freezeActiveUntil){
+      ms = Math.min(baseTime(), Math.round(ms * 1.35));
+    }
+    return ms;
+  }
+
+  // =======================
+  // UI helpers
+  // =======================
+  function setActiveScreen(which){
+    screenHome.classList.toggle('active', which === 'home');
+    screenGame.classList.toggle('active', which === 'game');
+  }
+  function modeLabel(){ return mode === "time" ? "30s" : "Endlos"; }
+  function diffLabel(){ return diff === "easy" ? "Easy" : (diff === "hard" ? "Hard" : "Normal"); }
+
+  function setChipActive(group, value){
+    const map = {
+      mode: { endless: chipEndless, time: chipTime },
+      diff: { easy: chipEasy, normal: chipNormal, hard: chipHard }
+    };
+    Object.values(map[group]).forEach(el => el.classList.remove('active'));
+    map[group][value].classList.add('active');
   }
 
   function renderStats(){
     elScore.textContent = String(score);
     elCombo.textContent = String(combo);
     elLives.textContent = String(lives);
-    elLimit.textContent = String(roundTimeMs());
+
+    pillMode.textContent = modeLabel();
+    pillDiff.textContent = diffLabel();
 
     if(mode === "time"){
-      timeLeftKbd.style.display = "inline-block";
-      timeLeftKbd.textContent = `Rest: ${timeLeft.toFixed(1)}s`;
-      hintLeft.textContent = "30-Sekunden-Challenge: so viele Treffer wie möglich!";
-      pillTimer.innerHTML = `Zeitlimit: <b>${roundTimeMs()}</b> ms`;
+      statRightLabel.textContent = "Restzeit";
+      statRightValue.textContent = `${timeLeft.toFixed(1)} s`;
+      pillTimeLeft.style.display = "inline-flex";
+      timeLeftEl.textContent = `${timeLeft.toFixed(1)}s`;
     } else {
-      timeLeftKbd.style.display = "none";
-      hintLeft.textContent = "Tipp: Triffst du falsch, verlierst du ein Leben.";
-      pillTimer.innerHTML = `Zeitlimit: <b id="limit">${roundTimeMs()}</b> ms`;
-      // Re-bind limit id after innerHTML changes
-      // (quick fix: set via query)
-      document.getElementById('limit').textContent = String(roundTimeMs());
+      statRightLabel.textContent = "Zeitlimit";
+      statRightValue.textContent = `${roundTimeMs()} ms`;
+      pillTimeLeft.style.display = "none";
     }
+
+    const shieldReady = shieldCharge >= 100;
+    const freezeReady = freezeCharge >= 100;
+    btnShield.textContent = shieldReady ? (shieldArmed ? "Shield: ARMED ✅" : "Shield: bereit") : `Shield: ${Math.floor(shieldCharge)}%`;
+    btnFreeze.textContent = freezeReady ? "Freeze: aktivieren" : `Freeze: ${Math.floor(freezeCharge)}%`;
+    powerHint.textContent = (Date.now() < freezeActiveUntil) ? "Freeze aktiv: Zeit ist langsamer." : "Power-Ups laden sich auf.";
   }
 
+  // =======================
+  // Board
+  // =======================
   function buildBoard(){
     board.innerHTML = '';
     tiles = [];
@@ -473,207 +795,245 @@
       tiles.push(t);
     }
   }
-
-  function setActive(index){
-    tiles.forEach((t,i) => {
-      t.classList.toggle('active', running && i === index);
-      t.classList.remove('bad');
-    });
+  function setActiveTile(index){
+    tiles.forEach((t,i) => t.classList.toggle('active', running && !paused && i === index));
     active = index;
   }
-
   function pickNewActive(){
     let next = active;
     while(next === active){
       next = Math.floor(Math.random() * GRID);
     }
-    setActive(next);
+    setActiveTile(next);
+  }
+  function flashBad(index){
+    tiles[index].classList.add('bad');
+    setTimeout(() => tiles[index].classList.remove('bad'), 160);
   }
 
+  // =======================
+  // Scores
+  // =======================
+  function maybeUpdateBest(sc){
+    if(sc > best){
+      best = sc;
+      localStorage.setItem(BEST_KEY, String(best));
+      elBest.textContent = String(best);
+    }
+  }
+  function addToTop10(sc){
+    const entry = { score: sc, diff, ts: Date.now() };
+    if(mode === "time"){
+      topTime.push(entry);
+      topTime.sort((a,b)=>b.score - a.score);
+      topTime = topTime.slice(0,10);
+      saveJSON(SCORES_TIME, topTime);
+    } else {
+      topEndless.push(entry);
+      topEndless.sort((a,b)=>b.score - a.score);
+      topEndless = topEndless.slice(0,10);
+      saveJSON(SCORES_ENDLESS, topEndless);
+    }
+  }
+
+  // =======================
+  // Game flow
+  // =======================
   function scheduleRoundTimeout(){
     clearTimeout(timerRound);
     timerRound = setTimeout(() => {
-      if(!running) return;
-      miss('Zu langsam!');
+      if(!running || paused) return;
+      miss("Zu langsam!");
     }, roundTimeMs());
   }
 
   function startModeTimerIfNeeded(){
     clearInterval(timerMode);
     if(mode !== "time") return;
-
     timeLeft = TIME_MODE_SECONDS;
     timerMode = setInterval(() => {
-      if(!running) return;
+      if(!running || paused) return;
       timeLeft = Math.max(0, timeLeft - 0.1);
       renderStats();
-      if(timeLeft <= 0){
-        finishTimeMode();
-      }
+      if(timeLeft <= 0) finishTimeMode();
     }, 100);
   }
 
-  function finishTimeMode(){
-    running = false;
-    clearTimeout(timerRound);
-    clearInterval(timerMode);
-    tiles.forEach(t => t.classList.remove('active'));
-
-    btnStart.textContent = 'Start';
-    btnStart.disabled = false;
-    btnPause.disabled = true;
-
-    addToTop10(score, mode);
-    showOver("Zeit um!", `Dein Score: ${score}\nBest: ${best}`);
-    sfxOver(); vibe(200);
-  }
-
-  function addToTop10(sc, md){
-    const entry = { score: sc, mode: md, ts: Date.now() };
-    top10.push(entry);
-    top10.sort((a,b)=> b.score - a.score);
-    top10 = top10.slice(0, 10);
-    saveJSON(SCORES_KEY, top10);
-  }
-
-  function maybeUpdateBest(){
-    if(score > best){
-      best = score;
-      localStorage.setItem(BEST_KEY, String(best));
-      elBest.textContent = String(best);
-    }
+  function addChargesOnHit(){
+    const shieldGain = diff === "hard" ? 10 : (diff === "easy" ? 14 : 12);
+    const freezeGain = diff === "hard" ? 9  : (diff === "easy" ? 13 : 11);
+    shieldCharge = Math.min(100, shieldCharge + shieldGain);
+    freezeCharge = Math.min(100, freezeCharge + freezeGain);
   }
 
   function hit(){
     score += 1;
     combo += 1;
-    maybeUpdateBest();
-
-    sfxHit(); vibe(18);
-
+    addChargesOnHit();
+    maybeUpdateBest(score);
+    sfx.hit(); vibe(16);
     pickNewActive();
     scheduleRoundTimeout();
     renderStats();
   }
 
-  function flashBad(index){
-    tiles[index].classList.add('bad');
-    setTimeout(() => tiles[index].classList.remove('bad'), 160);
+  function consumeShield(reason){
+    if(shieldArmed && shieldCharge >= 100){
+      shieldCharge = 0;
+      shieldArmed = false;
+      combo = 0;
+      hint.textContent = `Shield hat dich gerettet (${reason})`;
+      sfx.power(); vibe(30);
+      pickNewActive();
+      scheduleRoundTimeout();
+      renderStats();
+      return true;
+    }
+    return false;
   }
 
   function miss(reason){
+    if(consumeShield(reason)) return;
+
     combo = 0;
     lives -= 1;
-    renderStats();
-
-    sfxMiss(); vibe(60);
+    sfx.miss(); vibe(70);
 
     if(lives <= 0){
       gameOver(reason);
       return;
     }
+    hint.textContent = reason;
     pickNewActive();
     scheduleRoundTimeout();
+    renderStats();
   }
 
   function onTileTap(index){
-    // first user gesture = unlock audio on iOS
     ensureAudio();
+    if(settings.music) startBgm();
+    if(!running || paused) return;
 
-    if(!running) return;
     if(index === active){
+      hint.textContent = "Nice!";
       hit();
     } else {
       flashBad(index);
-      miss('Falsche Kachel!');
+      miss("Falsche Kachel!");
     }
   }
 
-  function start(){
-    if(running) return;
+  function startGame(){
     running = true;
+    paused = false;
 
-    btnStart.textContent = 'Läuft';
-    btnStart.disabled = true;
-    btnPause.disabled = false;
+    score = 0; combo = 0; lives = 3;
+    shieldCharge = 0; shieldArmed = false;
+    freezeCharge = 0; freezeActiveUntil = 0;
 
-    tiles.forEach(t => t.disabled = false);
-    setActive(active);
+    hint.textContent = "Tippe die leuchtende Kachel.";
+    buildBoard();
+    pickNewActive();
+
+    setActiveScreen('game');
+    renderStats();
     scheduleRoundTimeout();
     startModeTimerIfNeeded();
-    renderStats();
 
-    sfxStart(); vibe(25);
+    sfx.start(); vibe(25);
+    if(settings.music) startBgm();
   }
 
-  function pause(){
+  function pauseToggle(){
     if(!running) return;
-    running = false;
+    paused = !paused;
 
-    btnStart.textContent = 'Weiter';
-    btnStart.disabled = false;
-    btnPause.disabled = true;
-
-    clearTimeout(timerRound);
-
-    tiles.forEach(t => t.classList.remove('active'));
+    if(paused){
+      clearTimeout(timerRound);
+      hint.textContent = "Pausiert.";
+      tiles.forEach(t => t.classList.remove('active'));
+      btnPause.textContent = "Weiter";
+    } else {
+      hint.textContent = "Weiter!";
+      setActiveTile(active);
+      scheduleRoundTimeout();
+      btnPause.textContent = "Pause";
+    }
     renderStats();
   }
 
-  function reset(){
+  function restart(){
     clearTimeout(timerRound);
     clearInterval(timerMode);
+    startGame();
+  }
 
-    score = 0;
-    combo = 0;
-    lives = 3;
+  function finishTimeMode(){
     running = false;
+    paused = false;
+    clearTimeout(timerRound);
+    clearInterval(timerMode);
+    tiles.forEach(t => t.classList.remove('active'));
 
-    btnStart.textContent = 'Start';
-    btnStart.disabled = false;
-    btnPause.disabled = true;
+    addToTop10(score);
+    maybeUpdateBest(score);
 
-    pickNewActive();
-    tiles.forEach(t => t.disabled = false);
+    overTitle.textContent = "Zeit um!";
+    overText.textContent = `Dein Score: ${score}\nModus: 30s • Diff: ${diffLabel()}\nBest: ${best}`;
+    dlgOver.showModal();
 
-    if(mode === "time") timeLeft = TIME_MODE_SECONDS;
-
-    renderStats();
+    sfx.over(); vibe(200);
   }
 
   function gameOver(reason){
     running = false;
+    paused = false;
     clearTimeout(timerRound);
     clearInterval(timerMode);
-
     tiles.forEach(t => t.classList.remove('active'));
 
-    btnStart.textContent = 'Start';
-    btnStart.disabled = false;
-    btnPause.disabled = true;
+    addToTop10(score);
+    maybeUpdateBest(score);
 
-    addToTop10(score, mode);
-    showOver("Game Over", `${reason}\nDein Score: ${score}\nBest: ${best}`);
-    sfxOver(); vibe(220);
-  }
-
-  function showOver(title, text){
-    overTitle.textContent = title;
-    overText.textContent = text;
+    overTitle.textContent = "Game Over";
+    overText.textContent = `${reason}\nDein Score: ${score}\nModus: ${modeLabel()} • Diff: ${diffLabel()}\nBest: ${best}`;
     dlgOver.showModal();
+
+    sfx.over(); vibe(220);
   }
 
-  function setMode(newMode){
-    mode = newMode;
-
-    btnModeEndless.classList.toggle('active', mode === "endless");
-    btnModeTime.classList.toggle('active', mode === "time");
-
-    reset(); // clean switch
+  // power actions
+  function toggleShield(){
+    ensureAudio();
+    if(shieldCharge < 100){
+      hint.textContent = "Shield ist noch nicht bereit.";
+      return;
+    }
+    shieldArmed = !shieldArmed;
+    hint.textContent = shieldArmed ? "Shield ARMED: der nächste Fehler ist gratis." : "Shield deaktiviert.";
+    sfx.power(); vibe(25);
+    renderStats();
   }
 
+  function activateFreeze(){
+    ensureAudio();
+    if(freezeCharge < 100){
+      hint.textContent = "Freeze ist noch nicht bereit.";
+      return;
+    }
+    freezeCharge = 0;
+    freezeActiveUntil = Date.now() + 5000;
+    hint.textContent = "Freeze aktiv: Zeit ist langsamer!";
+    sfx.power(); vibe(35);
+    if(running && !paused) scheduleRoundTimeout();
+    renderStats();
+  }
+
+  // highscores dialog
   function renderScoreList(){
-    if(!top10.length){
+    const list = (mode === "time") ? topTime : topEndless;
+    scoresSubtitle.textContent = `Modus: ${modeLabel()} • Top 10 (Diff wird mitgespeichert)`;
+    if(!list.length){
       scoreList.innerHTML = `<div class="item"><span>—</span><span>Keine Einträge</span></div>`;
       return;
     }
@@ -684,61 +1044,116 @@
         return '';
       }
     };
-    scoreList.innerHTML = top10.map((e, idx) => {
-      const m = e.mode === "time" ? "30s" : "Endlos";
+    scoreList.innerHTML = list.map((e, idx) => {
+      const d = e.diff === "easy" ? "Easy" : (e.diff === "hard" ? "Hard" : "Normal");
       return `<div class="item">
-        <span>#${idx+1} • <b>${e.score}</b> • ${m}</span>
+        <span>#${idx+1} • <b>${e.score}</b> • ${d}</span>
         <span style="color:var(--muted)">${fmt(e.ts)}</span>
       </div>`;
     }).join('');
   }
 
-  // ---------- EVENTS ----------
-  overClose.addEventListener('click', () => dlgOver.close());
-  overAgain.addEventListener('click', () => { dlgOver.close(); reset(); start(); });
+  // selections
+  function setMode(newMode){ mode = newMode; setChipActive('mode', mode); }
+  function setDiff(newDiff){ diff = newDiff; setChipActive('diff', diff); }
 
-  btnStart.addEventListener('click', () => start());
-  btnPause.addEventListener('click', () => pause());
-  btnReset.addEventListener('click', () => reset());
+  // reset all
+  function resetAllData(){
+    if(!confirm("Wirklich ALLE Daten löschen? (Scores, Best, Settings)")) return;
+    localStorage.removeItem(SETTINGS_KEY);
+    localStorage.removeItem(BEST_KEY);
+    localStorage.removeItem(SCORES_ENDLESS);
+    localStorage.removeItem(SCORES_TIME);
+    location.reload();
+  }
 
-  btnModeEndless.addEventListener('click', () => setMode("endless"));
-  btnModeTime.addEventListener('click', () => setMode("time"));
+  // support link
+  if(SUPPORT_URL && SUPPORT_URL.startsWith("http")){
+    supportLink.href = SUPPORT_URL;
+  } else {
+    supportLink.href = "#";
+    supportLink.style.opacity = "0.55";
+    supportLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      alert("Trage oben im Code bei SUPPORT_URL deinen Spenden-Link ein (PayPal.me, Ko-fi, …).");
+    });
+  }
 
+  // top buttons
+  btnHome.addEventListener('click', () => setActiveScreen('home'));
   btnSettings.addEventListener('click', () => dlgSettings.showModal());
   settingsClose.addEventListener('click', () => dlgSettings.close());
 
+  btnScores.addEventListener('click', () => { renderScoreList(); dlgScores.showModal(); });
+  scoresClose.addEventListener('click', () => dlgScores.close());
+  scoresReset.addEventListener('click', () => {
+    const key = (mode === "time") ? SCORES_TIME : SCORES_ENDLESS;
+    if(confirm(`Highscores für ${modeLabel()} wirklich löschen?`)){
+      if(mode === "time") topTime = [];
+      else topEndless = [];
+      saveJSON(key, []);
+      renderScoreList();
+    }
+  });
+
+  // home
+  btnHow.addEventListener('click', () => dlgHow.showModal());
+  howClose.addEventListener('click', () => dlgHow.close());
+  btnResetAll.addEventListener('click', resetAllData);
+
+  chipEndless.addEventListener('click', () => setMode("endless"));
+  chipTime.addEventListener('click', () => setMode("time"));
+  chipEasy.addEventListener('click', () => setDiff("easy"));
+  chipNormal.addEventListener('click', () => setDiff("normal"));
+  chipHard.addEventListener('click', () => setDiff("hard"));
+
+  btnPlay.addEventListener('click', () => { ensureAudio(); startGame(); });
+
+  // game buttons
+  btnPause.addEventListener('click', pauseToggle);
+  btnRestart.addEventListener('click', restart);
+  btnShield.addEventListener('click', toggleShield);
+  btnFreeze.addEventListener('click', activateFreeze);
+
+  // settings controls
   chkSound.addEventListener('change', () => {
     settings.sound = chkSound.checked;
     saveJSON(SETTINGS_KEY, settings);
-    if(settings.sound) ensureAudio();
+    ensureAudio();
   });
+
+  chkMusic.addEventListener('change', () => {
+    settings.music = chkMusic.checked;
+    saveJSON(SETTINGS_KEY, settings);
+    ensureAudio();
+    if(settings.music){
+      startBgm();
+      setMusicVolume(Number(settings.musicVol ?? 35));
+    } else {
+      stopBgm();
+    }
+  });
+
+  rngMusic.addEventListener('input', () => setMusicVolume(Number(rngMusic.value)));
+
   chkVibe.addEventListener('change', () => {
     settings.vibe = chkVibe.checked;
     saveJSON(SETTINGS_KEY, settings);
   });
 
-  btnScores.addEventListener('click', () => {
-    renderScoreList();
-    dlgScores.showModal();
-  });
-  scoresClose.addEventListener('click', () => dlgScores.close());
-  scoresReset.addEventListener('click', () => {
-    if(confirm("Highscores wirklich löschen?")){
-      top10 = [];
-      saveJSON(SCORES_KEY, top10);
-      renderScoreList();
-    }
-  });
+  // game over dialog
+  overHome.addEventListener('click', () => { dlgOver.close(); setActiveScreen('home'); });
+  overAgain.addEventListener('click', () => { dlgOver.close(); startGame(); });
 
-  // ---------- INIT ----------
-  buildBoard();
-  pickNewActive();
-  btnPause.disabled = true;
+  // init
+  setChipActive('mode', mode);
+  setChipActive('diff', diff);
   renderStats();
+  setActiveScreen('home');
 
-  // Service Worker (Offline)
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  // Service Worker
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
   }
 })();
 </script>
